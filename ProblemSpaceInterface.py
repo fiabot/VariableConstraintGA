@@ -18,7 +18,7 @@ class ProblemSpace:
     def cross_over(self, ind1, ind2):
         return None, None 
     
-    def fitness(self): 
+    def fitness(self, ind): 
         return 0 
     
     def get_num_bins(self):
@@ -39,6 +39,9 @@ class ProblemSpace:
     
     def get_rand_constraint(self):
         return Constraint() 
+    
+    def get_ind_constraint(self, ind):
+        return Constraint()
     
 
     

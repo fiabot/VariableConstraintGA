@@ -994,6 +994,12 @@ class Puzzle:
             return self.grids[self._to_key(cat1, cat2)]
         else:
             return None
+        
+    def get_grid_keys(self):
+        return list(self.grids.keys())
+
+    def get_grid_by_key(self, key):
+        return self.grids[key]
 
     def trim_ent(self, ent):
         """
@@ -1119,8 +1125,6 @@ class Puzzle:
     def print_grid_small(self):
         """
         return the entire puzzle string
-
-        TODO: add category names?
         """
         return_str = ""
         for i in range(len(self.top_bottom)):
@@ -1128,7 +1132,7 @@ class Puzzle:
 
         return return_str
 
-    def _grid_is_valid(self, grid):
+    def grid_is_valid(self, grid):
         """
         Check that there are one or less "O"s
         for each row and column in a grid
@@ -1149,7 +1153,7 @@ class Puzzle:
 
         return True
 
-    def _grid_is_complete(self, grid):
+    def grid_is_complete(self, grid):
         """
            Check that there is exactly 1 "O"s
         for each row and column in a grid
@@ -1317,7 +1321,7 @@ class Puzzle:
                     if self.get_symbol(cat1, cat2, ent1, ent2) == "X":
                         violations += 1
 
-                    # make sure there is not a truth somehwere else
+                    # make sure there is not a truth somewhere else
                     truths1 = self.find_truths(cat1, ent1)
                     if cat2.title in truths1 and truths1[cat2.title] != ent2:
                         violations += 1
