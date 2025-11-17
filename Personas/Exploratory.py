@@ -24,5 +24,8 @@ class ExploratoryUser(User):
                 return cur_constraints,True, False 
         ## decide to add constraint 
         else: 
-            cur_constraints += [self.problem_space.get_rand_constraint()]
+            new_con = self.problem_space.get_rand_constraint() 
+            #while not self.problem_space.is_contradictory( cur_constraints + [new_con]):
+            #    new_con = self.problem_space.get_rand_constraint()
+            cur_constraints += [new_con]
             return cur_constraints, True,  False 

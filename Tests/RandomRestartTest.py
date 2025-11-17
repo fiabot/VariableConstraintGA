@@ -8,12 +8,14 @@ from GeneticAlgorithmInterface import VariableConstraintGA
 from Algorithms.RandomRestarts import RandomRestarts
 from Personas.Exploratory import ExploratoryUser
 from Personas.DoNothing import DoNothing 
+from Personas.Strict import StrictUser 
+from Personas.Adaptive import AdaptiveUser
 from ProblemSpaces.LogicPuzzles.LogicPuzzleSpace import LogicPuzzleSpace
 
 
 problem_space = LogicPuzzleSpace()
-user = ExploratoryUser(problem_space)
-algorithm = RandomRestarts(problem_space, number_generations=100, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=10)
+user = AdaptiveUser(problem_space)
+algorithm = RandomRestarts(problem_space, number_generations=150, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=30)
 
 print(algorithm.run()) 
 
