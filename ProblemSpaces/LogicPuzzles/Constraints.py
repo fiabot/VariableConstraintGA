@@ -17,6 +17,9 @@ class GridIsValid(Constraint):
         grid = puzz.get_grid_by_key(self.grid_key)
         return puzz.grid_is_valid(grid)
 
+    def __str__(self):
+        return "grid: {} is valid".format(self.grid_key)
+
 class GridIsComplete(Constraint):
     def __init__(self, grid_key):
         self.grid_key = grid_key 
@@ -25,13 +28,18 @@ class GridIsComplete(Constraint):
         puzz = indv.completed_puzzle 
         grid = puzz.get_grid_by_key(self.grid_key)
         return puzz.grid_is_complete(grid)
+    
+    def __str__(self):
+        return "grid: {} is complete".format(self.grid_key)
 
 class NoViolations(Constraint):
 
     def apply(self, indv):
         puzz = indv.completed_puzzle 
-        return puzz.num_violations == 0 
-    
+        return puzz.num_violations() == 0 
+
+    def __str__(self):
+        return "No violations in puzzle" 
 
 def get_constant_constraints(puzz):
     grid_keys = puzz.get_grid_keys()
@@ -43,18 +51,22 @@ def get_constant_constraints(puzz):
     return valid_constraints + complete_constraints + [violations]
 
 
-def get_duplicates(self, hint):
-        rule = list(hint.keys())[0]
-        terms = hint[rule]
-        if rule == "simple_hint":
+def get_duplicates(hint):
+        try:
             rule = list(hint.keys())[0]
+        except:
+            print(hint)
+            raise Exception("Getting rule failed")
+        
+        terms = hint[rule]
+       
         if rule == "is":
             part1 = terms[:2]
             part2 = terms[2:]
             return [{"is": part2 + part1}]
             
         elif rule == "not":
-            return [{"not": self._get_duplicates(terms)[0]}]
+            return [{"not": get_duplicates(terms[0])[0]}]
             
         elif rule == "before":
             return []
@@ -65,14 +77,14 @@ def get_duplicates(self, hint):
             return [{"simple_or": part2 + part1 + terms[4:]}]
             
         elif rule == "compound_or":
-            possible1 = [terms[0], self._get_duplicates(terms[0][0])]
-            possible2 = [terms[1], self._get_duplicates(terms[1][0])]
+            possible1 = [terms[0], get_duplicates(terms[0])]
+            possible2 = [terms[1], get_duplicates(terms[1])]
 
             all_combos = [] 
             for pos1 in possible1:
                 for pos2 in possible2:
-                    all_combos.append({"compound_or": pos1 + pos2})
-                    all_combos.append({"compound_or": pos2 + pos1})
+                    all_combos.append({"compound_or": [pos1] + [pos2]})
+                    all_combos.append({"compound_or": [pos2] + [pos1]})
             return all_combos
 
 
@@ -95,6 +107,7 @@ def str_hint(hint, str_so_far=""):
 
 class HasHint(Constraint):
     def __init__(self, hint):
+
         self.hint = hint 
         self.duplicates = [hint] + get_duplicates(hint)
 
