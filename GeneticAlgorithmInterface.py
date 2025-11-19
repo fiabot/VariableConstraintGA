@@ -14,7 +14,7 @@ class Measures:
     
     def add_gen(self, population, constraint_size, made_change, followed_rec):
         self.populations.append(population)
-        self.constraint_size.append(constraint_size)
+        
 
         fitnesses = [element[0][0] for element in population if len(element) > 0]
 
@@ -32,7 +32,6 @@ class Measures:
             old_div = self.diversity[-1]
             
             if made_change:
-                # lost a constraint 
                 if old_size > constraint_size:
                     self.robustness.append(new_div - old_div)
 
@@ -44,6 +43,7 @@ class Measures:
                 self.advisability.append(new_div - old_div)
         
         self.diversity.append(new_div)
+        self.constraint_size.append(constraint_size)
 
 
 class User:
@@ -63,6 +63,7 @@ class VariableConstraintGA:
         self.mutation_rate = mutation_rate
         self.user = user 
         self.made_change = False 
+        self.followed_rec = False 
         self.update_interval = update_interval 
     
     def reset(self):
@@ -87,10 +88,13 @@ class VariableConstraintGA:
 
             # if interval is met, ask user to update 
             if gen % self.update_interval == 0:
-                self.variable_constraints , self.made_change, followed_rec  = self.user.update_constraints(self.variable_constraints[:], population, recommendation)
+                variable_constraints , made_change, followed_rec  = self.user.update_constraints(self.variable_constraints[:], population, recommendation)
             else:
                 followed_rec = False 
-                self.made_change = False 
-            self.record_gen(population, recommendation, self.variable_constraints, self.made_change, followed_rec)
+                made_change = False 
+            self.record_gen(population, recommendation, self.variable_constraints, self.made_change, self.followed_rec)
+            self.made_change = made_change
+            self.followed_rec = followed_rec 
+            self.variable_constraints = variable_constraints
         
         return population

@@ -14,7 +14,7 @@ from ProblemSpaces.LogicPuzzles.LogicPuzzleSpace import LogicPuzzleSpace
 
 
 problem_space = LogicPuzzleSpace()
-user = AdaptiveUser(problem_space)
+user = ExploratoryUser(problem_space)
 algorithm = Shuffling(problem_space, number_generations=150, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=30)
 
 print(algorithm.run()) 
@@ -30,3 +30,16 @@ for con in problem_space.get_constant_constraints() + algorithm.variable_constra
                 print(con)
 
 print(algorithm.measure_history.quality)
+
+
+print("Quality")
+print(algorithm.measure_history.quality)
+
+print("\n\nDiversity")
+print(algorithm.measure_history.diversity)
+
+print("\n\nAdaptability")
+print(algorithm.measure_history.adaptability)
+
+print("\n\nRobustness")
+print(algorithm.measure_history.robustness)

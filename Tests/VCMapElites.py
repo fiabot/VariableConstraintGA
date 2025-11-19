@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir)) 
 sys.path.append(str(Path.cwd().parent) + "/ProblemSpaces/LogicPuzzles") 
 from GeneticAlgorithmInterface import VariableConstraintGA
-from Algorithms.Filtering import Filtering
+from Algorithms.VCMapElites import VariableConstraintMapElites
 from Personas.Exploratory import ExploratoryUser
 from Personas.DoNothing import DoNothing 
 from Personas.Strict import StrictUser 
@@ -15,7 +15,7 @@ from ProblemSpaces.LogicPuzzles.LogicPuzzleSpace import LogicPuzzleSpace
 
 problem_space = LogicPuzzleSpace()
 user = ExploratoryUser(problem_space)
-algorithm = Filtering(problem_space, number_generations=150, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=30)
+algorithm = VariableConstraintMapElites(problem_space, number_generations=100, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=10)
 
 print(algorithm.run()) 
 
@@ -28,8 +28,6 @@ for con in problem_space.get_constant_constraints() + algorithm.variable_constra
             else:
                 print("Satisfied: ")
                 print(con)
-
-print(algorithm.measure_history.quality)
 
 print("Quality")
 print(algorithm.measure_history.quality)
