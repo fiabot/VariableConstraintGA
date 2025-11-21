@@ -18,15 +18,15 @@ import jsonpickle
 
 
 NUM_GENS = 300 
-POP_SIZE = 100 
-MEMORY = 500 
+POP_SIZE = 200 
+MEMORY = 1000 
 INTERVAL = 50 
 TRIALS = 10 
-FOLDER = "Experiments/Exploratory"
+FOLDER = "Experiments/Exploratory2"
 
 problem_space = LogicPuzzleSpace()
 user = ExploratoryUser(problem_space)
-algorithm = VariableConstraintMapElites(problem_space, number_generations=100, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=10)
+#algorithm = VariableConstraintMapElites(problem_space, number_generations=100, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=10)
 
 trial_info = {"Gens": NUM_GENS, "pop": POP_SIZE, "mem": MEMORY, "intervals":INTERVAL}
 file = open(FOLDER + "/info.json", "w")

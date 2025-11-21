@@ -10,11 +10,12 @@ from Personas.Exploratory import ExploratoryUser
 from Personas.DoNothing import DoNothing 
 from Personas.Strict import StrictUser 
 from Personas.Adaptive import AdaptiveUser
+from Personas.TwoForwardOneBack import TwoForOneBackUser 
 from ProblemSpaces.LogicPuzzles.LogicPuzzleSpace import LogicPuzzleSpace
 
 
 problem_space = LogicPuzzleSpace()
-user = ExploratoryUser(problem_space)
+user = TwoForOneBackUser(problem_space)
 algorithm = VariableConstraintMapElites(problem_space, number_generations=100, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=10)
 
 print(algorithm.run()) 
@@ -29,8 +30,8 @@ for con in problem_space.get_constant_constraints() + algorithm.variable_constra
                 print("Satisfied: ")
                 print(con)
 
-print("Quality")
-print(algorithm.measure_history.quality)
+print("Constraints")
+print(algorithm.measure_history.constraint_size)
 
 print("\n\nDiversity")
 print(algorithm.measure_history.diversity)
