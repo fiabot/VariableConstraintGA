@@ -21,10 +21,12 @@ def decide(rate):
     return random.random() < rate
 
 class VariableConstraintMapElites(VariableConstraintGA):
-    def __init__(self, problem_space: ProblemSpace, number_generations, population_size, max_memory, cross_over_rate, mutation_rate, user, update_interval, infeasible_rate = 0.3, elitism = 0.3, height=4):
+    def __init__(self, problem_space: ProblemSpace, number_generations, population_size, max_memory, cross_over_rate, mutation_rate, user, update_interval, infeasible_rate = 0.3, elitism = 0.3, height=4, advice_thres = 0.5, advice_height=2):
         self.infeasible_rate = infeasible_rate 
         self.elitism = elitism
         self.height = height 
+        self.advice_thres = advice_thres
+        self.advice_height = advice_height
         super().__init__(problem_space, number_generations, population_size, max_memory, cross_over_rate, mutation_rate, user, update_interval)
     
     def _sort_pop(self, pop):
@@ -116,6 +118,46 @@ class VariableConstraintMapElites(VariableConstraintGA):
                 
                 infeasible_pop.append((constraints_sat, ind))
     
+    def advise(self):
+
+        # determine if difference in diversity is great enough 
+        top_div = len([b for b in self.bins[0] if len(b) > 0]) / len(self.bins[0])
+
+        next_div = 0 
+        for col  in range(len(self.bins[0])):
+            has_one = False 
+            for row in range(self.advice_height):
+                if len(self.bins[row + 1][col]) > 0:
+                    has_one = True 
+            if has_one:
+                next_div += 1 
+        
+        next_div = next_div / len(self.bins[0])
+        #print(next_div - top_div)
+        if next_div - top_div > self.advice_thres:
+            # give advice 
+           
+            constraint_violations = []
+
+            for con in self.variable_constraints:
+                num_vio = 0 
+                for row in range(self.advice_height):
+                    for col in row:
+                        for ind in col:
+                            if not con.apply(ind):
+                                num_vio += 1 
+                constraint_violations.append(num_vio)
+            
+            # find index of constraint with most violations 
+            index = constraint_violations.index(min(constraint_violations))
+
+            return self.variable_constraints[index]
+
+
+
+        else:
+            return None 
+
 
 
     def set_up(self):
@@ -196,6 +238,6 @@ class VariableConstraintMapElites(VariableConstraintGA):
         
         self.infeasible_pop = new_infeasible 
 
-        return self.bins[0], None 
+        return self.bins[0], None
 
     

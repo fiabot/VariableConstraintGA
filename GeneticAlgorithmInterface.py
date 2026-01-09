@@ -11,22 +11,54 @@ class Measures:
         self.populations = []
         self.diversity = [] 
         self.constraint_size = [] 
-        self.adaptability = [] 
-        self.robustness = [] 
-        self.advisability = [] 
+        self.adaptability_div = [] 
+        self.robustness_div = [] 
+        self.advisability_div = [] 
+
+        self.adaptability_qd = [] 
+        self.robustness_qd = [] 
+        self.advisability_qd = [] 
         self.quality = [] 
         self.qd_score = [] 
     
     def add_adaptability(self, old_pop, new_pop):
+        old_fitnesses = [element[0][0] for element in old_pop if len(element) > 0]
+        new_fitnesses = [element[0][0] for element in new_pop if len(element) > 0]
         old_num_bins = len([bi for bi in old_pop if len(bi) > 0])
         old_div = old_num_bins / len(old_pop)
+
+
+        old_qd = sum(old_fitnesses)
+        new_qd = sum(new_fitnesses)
 
         new_num_bins = len([bi for bi in new_pop if len(bi) > 0])
         new_div = new_num_bins / len(new_pop)
 
-        score = (new_div - old_div) / old_div if old_div != 0 else 0 
+        div_score = (new_div - old_div) / old_div if old_div != 0 else 0 
+        qd_score = (new_qd - old_qd) / old_qd if old_qd != 0 else 0 
 
-        self.adaptability.append(score)
+        self.adaptability_div.append(div_score)
+        self.adaptability_qd.append(qd_score)
+    
+    def add_robustness(self, old_pop, new_pop):
+        old_fitnesses = [element[0][0] for element in old_pop if len(element) > 0]
+        new_fitnesses = [element[0][0] for element in new_pop if len(element) > 0]
+        old_num_bins = len([bi for bi in old_pop if len(bi) > 0])
+        old_div = old_num_bins / len(old_pop)
+
+
+        old_qd = sum(old_fitnesses)
+        new_qd = sum(new_fitnesses)
+
+        new_num_bins = len([bi for bi in new_pop if len(bi) > 0])
+        new_div = new_num_bins / len(new_pop)
+
+        div_score = (new_div - old_div) / old_div if old_div != 0 else 0 
+        qd_score = (new_qd - old_qd) / old_qd if old_qd != 0 else 0 
+
+        self.robustness_div.append(div_score)
+        self.robustness_qd.append(qd_score)
+
     
     def add_gen(self, population, constraint_size, made_change, followed_rec):
         self.populations.append(population)
@@ -35,7 +67,7 @@ class Measures:
         fitnesses = [element[0][0] for element in population if len(element) > 0]
 
         self.qd_score.append(sum(fitnesses))
-
+        qd_score = sum(fitnesses)
 
         if len(fitnesses) > 0:
             self.quality.append(sum(fitnesses) / len(fitnesses))
@@ -45,17 +77,11 @@ class Measures:
         new_div = num_bins / len(population)
 
         if len(self.populations) > 1:
-
-            old_size = self.constraint_size[-1]
             old_div = self.diversity[-1]
-            score = (new_div - old_div) / new_div if new_div != 0 else 0  
+            div_score = (new_div - old_div) / new_div if new_div != 0 else 0  
             
-            if made_change:
-                if old_size > constraint_size:
-                    self.robustness.append(score)
-
             if followed_rec:
-                self.advisability.append(score)
+                self.advisability_div.append(div_score)
         
         self.diversity.append(new_div)
         self.constraint_size.append(constraint_size)
@@ -138,8 +164,8 @@ class VariableConstraintGA:
         self.reset()
         self.set_up()
         constraints_add_this_cycle = False 
+        constraints_removed = False 
         old_pop = [[]]
-
         for gen in range(self.number_generations):
             population, recommendation = self.run_one_generation(self.made_change)
 
@@ -148,12 +174,15 @@ class VariableConstraintGA:
                 # end of old cycle 
                 if constraints_add_this_cycle:
                     self.measure_history.add_adaptability(old_pop, population)
+                elif constraints_removed:
+                    self.measure_history.add_robustness(old_pop, population)
 
                 variable_constraints , made_change, followed_rec  = self.user.update_constraints(self.variable_constraints[:], population, recommendation)
 
                 # beginning of new cycle 
                 old_pop = population 
                 constraints_add_this_cycle = len(self.variable_constraints) < len(variable_constraints)
+                constraints_removed = len(self.variable_constraints) > len(variable_constraints)
             else:
                 followed_rec = False 
                 made_change = False 
