@@ -15,7 +15,7 @@ from ProblemSpaces.LogicPuzzles.LogicPuzzleSpace import LogicPuzzleSpace
 
 
 problem_space = LogicPuzzleSpace()
-user = TwoForOneBackUser(problem_space)
+user = AdaptiveUser(problem_space)
 algorithm = VariableConstraintMapElites(problem_space, number_generations=100, population_size=50, max_memory=500, cross_over_rate=0.7, mutation_rate=0.5,user=user, update_interval=10)
 
 print(algorithm.run()) 
@@ -37,7 +37,8 @@ print("\n\nDiversity")
 print(algorithm.measure_history.diversity)
 
 print("\n\nAdaptability")
-print(algorithm.measure_history.adaptability)
+print(algorithm.measure_history.adaptability_qd)
 
 print("\n\nRobustness")
-print(algorithm.measure_history.robustness)
+print(algorithm.measure_history.robustness_qd)
+

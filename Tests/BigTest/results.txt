@@ -1,0 +1,100 @@
+Persona: Adaptive
+	Algorithm: Filtering
+		QD-score: 11.35716
+		Avg Adapt: 0.02923228994000265
+		Lat adapt: -0.4018181818181818
+		Avg Robust: NA
+		Last Robo: NA
+	Algorithm: Restarts
+		QD-score: 7.72632
+		Avg Adapt: -0.10704449702844712
+		Lat adapt: -0.8900087154225086
+		Avg Robust: NA
+		Last Robo: NA
+	Algorithm: Shuffling
+		QD-score: 43.0282
+		Avg Adapt: 0.202288738594217
+		Lat adapt: -0.029892898053947542
+		Avg Robust: NA
+		Last Robo: NA
+	Algorithm: VCMap
+		QD-score: 40.8902
+		Avg Adapt: 0.21792570810405687
+		Lat adapt: -0.0032138111979849917
+		Avg Robust: NA
+		Last Robo: NA
+Persona: Exploratory
+	Algorithm: Filtering
+		QD-score: 16.73428
+		Avg Adapt: -0.40622378495020006
+		Lat adapt: -0.2792991452991453
+		Avg Robust: 0.12627633193578075
+		Last Robo: 0.10369456224048061
+	Algorithm: Restarts
+		QD-score: 27.4722
+		Avg Adapt: -0.20257969593936237
+		Lat adapt: -0.2614181021543762
+		Avg Robust: 0.3084017180433891
+		Last Robo: 0.20112998847536134
+	Algorithm: Shuffling
+		QD-score: 28.72024
+		Avg Adapt: -0.07901643351447851
+		Lat adapt: -0.2080323578059195
+		Avg Robust: 0.3086795039572793
+		Last Robo: 0.05698248702927434
+	Algorithm: VCMap
+		QD-score: 26.37428
+		Avg Adapt: -0.18656512698255392
+		Lat adapt: -0.2755600404789642
+		Avg Robust: 0.12526119442417946
+		Last Robo: 0.11611366781791721
+Persona: Strict
+	Algorithm: Filtering
+		QD-score: 0.55456
+		Avg Adapt: -0.11175362736342773
+		Lat adapt: 0.0
+		Avg Robust: NA
+		Last Robo: NA
+	Algorithm: Restarts
+		QD-score: 4.61012
+		Avg Adapt: 0.004253968950971784
+		Lat adapt: 0.0
+		Avg Robust: NA
+		Last Robo: NA
+	Algorithm: Shuffling
+		QD-score: 7.11196
+		Avg Adapt: 0.021181212643601358
+		Lat adapt: -0.0538188995215311
+		Avg Robust: NA
+		Last Robo: NA
+	Algorithm: VCMap
+		QD-score: 3.40864
+		Avg Adapt: 0.009971722118590232
+		Lat adapt: 0.0
+		Avg Robust: NA
+		Last Robo: NA
+Persona: TwoForward
+	Algorithm: Filtering
+		QD-score: 28.7396
+		Avg Adapt: -0.9439947884716287
+		Lat adapt: -0.9582065258291673
+		Avg Robust: 0.38582763578475787
+		Last Robo: 0.3152651515151515
+	Algorithm: Restarts
+		QD-score: 34.848
+		Avg Adapt: -0.33907591697010375
+		Lat adapt: -0.39217806657043913
+		Avg Robust: 0.13491177797194603
+		Last Robo: 0.20781858579304557
+	Algorithm: Shuffling
+		QD-score: 34.66112
+		Avg Adapt: -0.45287279549125864
+		Lat adapt: -0.46762193404306757
+		Avg Robust: 0.1942683307080745
+		Last Robo: 0.20939282609763477
+	Algorithm: VCMap
+		QD-score: 38.56092
+		Avg Adapt: -0.4188667597238897
+		Lat adapt: -0.5184223320355396
+		Avg Robust: 0.21555149895353484
+		Last Robo: 0.22038675382117026
