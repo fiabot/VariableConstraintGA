@@ -15,7 +15,10 @@ class TwoForOneBackUser(User):
         self.next_move = "Forward"
     
     def update_constraints(self, cur_constraints, feasible, recommendation = None):
+
+        
         cur_constraints = cur_constraints[:]
+        print(self.last_move, self.next_move)
 
         ## decide to remove constraint 
         if self.next_move == "Back": 
@@ -31,11 +34,12 @@ class TwoForOneBackUser(User):
             #    new_con = self.problem_space.get_rand_constraint()
             cur_constraints += [new_con]
             to_return = cur_constraints, True,  False 
-
-        if self.next_move == "Forward" and self.last_move == "Forward":
+        this_move = self.next_move 
+        if self.next_move == "Forward":
             self.next_move = "Back"
         elif self.next_move == "Back":
             self.next_move = "Forward"
+        self.last_move = this_move
         
-        self.last_move = self.next_move 
+        print(cur_constraints)
         return to_return 

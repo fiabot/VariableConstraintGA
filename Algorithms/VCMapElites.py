@@ -10,18 +10,24 @@ from GeneticAlgorithmInterface import VariableConstraintGA
 from ProblemSpaceInterface import ProblemSpace 
 
 def roulette_selection(population):
-    m = sum([c[0] for c in population])
+    small = min([c[0] for c in population]) # make all the fitnesses positive 
+    if small < 0:
+        add = -small 
+    else:
+        add = 0 
+    m = sum([c[0] + add for c in population])
     if m == 0:
         selection_probs = [1 / len(population) for c in population]
     else:
-        selection_probs = [c[0] / m for c in population]
+        selection_probs = [(c[0] + add) / m for c in population]
     return population[npr.choice(len(population), p=selection_probs)]
+
 
 def decide(rate):
     return random.random() < rate
 
 class VariableConstraintMapElites(VariableConstraintGA):
-    def __init__(self, problem_space: ProblemSpace, number_generations, population_size, max_memory, cross_over_rate, mutation_rate, user, update_interval, infeasible_rate = 0.3, elitism = 0.3, height=4, advice_thres = 0.5, advice_height=2):
+    def __init__(self, problem_space: ProblemSpace, number_generations, population_size, max_memory, cross_over_rate, mutation_rate, user, update_interval, infeasible_rate = 0.5, elitism = 0.3, height=4, advice_thres = 0.5, advice_height=2):
         self.infeasible_rate = infeasible_rate 
         self.elitism = elitism
         self.height = height 
@@ -49,9 +55,19 @@ class VariableConstraintMapElites(VariableConstraintGA):
         select = roulette_selection(rows)
         return self.bins[select[1]]
     
+    def num_in_grid(self):
+        n = 0 
+        for row in range(len(self.bins)):
+            for col in range(len(self.bins[0])):
+                n += len(self.bins[row][col])
+        return n 
+
+
     def select(self):
         # select from feasible 
-        if decide((self.num_feasible * 2) / (self.num_feasible + len(self.infeasible_pop))):
+        grid_size = self.num_in_grid()
+
+        if decide(grid_size *2 / (grid_size+ len(self.infeasible_pop))):
 
             # First select the row (based on ranking)
             row = self.select_row()
@@ -66,6 +82,52 @@ class VariableConstraintMapElites(VariableConstraintGA):
         # select from infeasible 
         else:
             return roulette_selection(self.infeasible_pop)
+
+    def make_room(self):
+        '''
+        remove the worst indivual if the 
+        feasible or infeasible population exceeds max capacity 
+        '''
+
+        # feasible pop exceeds capacity 
+        while self.num_feasible > self.feasible_pop_size:
+            worst_fit = None 
+            worst_bin = None 
+
+            for i, b in enumerate(self.bins[0]):
+                if len(b) > 0:
+                    worst = b[-1]
+
+                    if worst_fit is None or worst[0] < worst_fit:
+                        worst_fit = worst[0]
+                        worst_bin = i 
+                
+            self.bins[0][worst_bin] = self.bins[0][worst_bin][:-1]
+            self.num_feasible -= 1 
+        
+
+        while self.num_infeasible > self.infeasible_pop_size:
+            if len(self.infeasible_pop) > 0:
+                self.infeasible_pop = self.infeasible_pop[:-1]
+                self.num_infeasible -= 1 
+            else:
+                worst_fit = None 
+                worst_row = -1 
+                worst_col = -1 
+                for row in range(1, self.height):
+                    for col in range(len(self.bins[0])):
+                        if len(self.bins[row][col]) >0:
+                            ind = self.bins[row][col][-1]
+
+                            if worst_fit is None or ind[0] < worst_fit:
+                                worst_fit = ind[0]
+                                worst_row = row 
+                                worst_col = col 
+                
+                self.bins[worst_row][worst_col] = self.bins[worst_row][worst_col][:-1]
+                self.num_infeasible -= 1 
+
+
 
 
     def place_in_bin(self, ind, infeasible_pop):
@@ -100,23 +162,22 @@ class VariableConstraintMapElites(VariableConstraintGA):
             # then determine the column 
             b = self.problem_space.place_in_bin(ind)
 
-            # check if there is room
-            if len(self.bins[l][b]) < self.inds_per_bin:
-                self.bins[l][b].append((self.problem_space.fitness(ind), ind))
-                self._sort_pop(self.bins[l][b])
+            self.bins[l][b].append((self.problem_space.fitness(ind), ind))
+            self._sort_pop(self.bins[l][b])
+            if l == 0:
                 self.num_feasible += 1 
-            # if individual is better then current ones, replace it 
-            elif self.problem_space.fitness(ind) >= self.bins[l][b][-1][0]: 
-                self.bins[l][b].pop(-1)
-                self.bins[l][b].append((self.problem_space.fitness(ind), ind))
-                self._sort_pop(self.bins[l][b])
-                self.num_feasible += 1 
+            else:
+                self.num_infeasible += 1 
+
+
         # otherwise put in the infeasible population 
         else:
-            # if there is still room in the infeasible fitness add it 
-            if len(infeasible_pop) < self.infeasible_pop_size:
-                
-                infeasible_pop.append((constraints_sat, ind))
+            infeasible_pop.append((constraints_sat, ind))
+            self._sort_pop(infeasible_pop)
+            self.num_infeasible += 1
+        
+        self.make_room()
+
     
     def advise(self):
 
@@ -164,9 +225,10 @@ class VariableConstraintMapElites(VariableConstraintGA):
         self.infeasible_pop_size = self.max_memory * self.infeasible_rate 
         self.elitism_num = round(self.infeasible_pop_size * self.elitism)
         self.feasible_pop_size = self.max_memory - self.infeasible_pop_size 
-        self.inds_per_bin = math.floor((self.feasible_pop_size / self.problem_space.get_num_bins())/self.height) 
+        self.inds_per_bin = math.floor((self.feasible_pop_size / self.problem_space.get_num_bins())) 
         self.bins = []
         self.num_feasible = 0 
+        self.num_infeasible = 0  
         self.infeasible_pop = [] 
         
         for j in range(self.height):

@@ -1,0 +1,180 @@
+Persona: Adaptive
+	Algorithm: Filtering
+		QD-score: 17.592933333333335
+			std: 16.090018082229545
+		Avg Adapt: 0.0747614449090299
+			std: 0.8130368246872212
+		Lat adapt: -0.2614396456256921
+			std: 0.41223440581425924
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+	Algorithm: Restarts
+		QD-score: 11.400533333333334
+			std: 18.550970994861764
+		Avg Adapt: 0.17505733390968217
+			std: 1.4995908856524744
+		Lat adapt: -0.7109051910812831
+			std: 0.5935062611130425
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+	Algorithm: Shuffling
+		QD-score: 44.47026666666667
+			std: 11.151518436697971
+		Avg Adapt: 0.5414344041906284
+			std: 1.3689295676274709
+		Lat adapt: -0.03530462962962963
+			std: 0.11363279268171303
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+	Algorithm: VCMap
+		QD-score: 29.54693333333333
+			std: 11.241357258384046
+		Avg Adapt: 0.09022221428198263
+			std: 0.5801139697004551
+		Lat adapt: -0.10857142857142858
+			std: 0.22462701090635248
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+Persona: Exploratory
+	Algorithm: Filtering
+		QD-score: 21.8016
+			std: 25.158579013656517
+		Avg Adapt: -0.6038359788359787
+			std: 0.49073824497718166
+		Lat adapt: -0.4583333333333333
+			std: 0.5089773777040515
+		Avg Recovery: 0.0
+			std: 0.0
+		Last Recovery: 0.0
+			std: 0.0
+	Algorithm: Restarts
+		QD-score: 30.650666666666666
+			std: 23.682048295641277
+		Avg Adapt: 0.06862299287770898
+			std: 1.1629595238426476
+		Lat adapt: -0.2670333528647482
+			std: 0.4323874345076909
+		Avg Recovery: -0.010213528687302714
+			std: 0.2528470726486825
+		Last Recovery: 0.011479448116164474
+			std: 0.16258778368754714
+	Algorithm: Shuffling
+		QD-score: 33.8788
+			std: 22.97567035112892
+		Avg Adapt: -0.1444418158095866
+			std: 0.7750624712040842
+		Lat adapt: -0.3669555714445964
+			std: 0.43401499248153774
+		Avg Recovery: 0.11802354110284537
+			std: 0.2184345182436968
+		Last Recovery: 0.10436100305638407
+			std: 0.1952360539169489
+	Algorithm: VCMap
+		QD-score: 22.87226666666667
+			std: 19.778260156179805
+		Avg Adapt: 0.25880380542203013
+			std: 1.3815618688106104
+		Lat adapt: -0.23577819006390435
+			std: 0.8924021174926914
+		Avg Recovery: -0.12625013532640791
+			std: 0.24759308762051696
+		Last Recovery: -0.1338776976431787
+			std: 0.26737829695631565
+Persona: Strict
+	Algorithm: Filtering
+		QD-score: 0.4296
+			std: 2.963255184900345
+		Avg Adapt: -0.20320000000000002
+			std: 0.4009939264281419
+		Lat adapt: 0.0
+			std: 0.0
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+	Algorithm: Restarts
+		QD-score: 6.633466666666667
+			std: 14.390211849558211
+		Avg Adapt: 0.033306494641673554
+			std: 1.0018976262335522
+		Lat adapt: -0.10705882352941178
+			std: 0.3007679521075911
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+	Algorithm: Shuffling
+		QD-score: 10.246533333333334
+			std: 16.963713930846605
+		Avg Adapt: 0.09757201543027841
+			std: 1.0109201553307157
+		Lat adapt: -0.1746948808414326
+			std: 0.3285113989434327
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+	Algorithm: VCMap
+		QD-score: 11.145066666666667
+			std: 17.125884749486158
+		Avg Adapt: 0.000639907881758889
+			std: 0.8595831337320113
+		Lat adapt: -0.14222222222222222
+			std: 0.33029984476269464
+		Avg Recovery: NA
+			std: -1
+		Last Recovery: NA
+			std: -1
+Persona: TwoForward
+	Algorithm: Filtering
+		QD-score: 0.8945333333333333
+			std: 3.83093116444298
+		Avg Adapt: -0.35703703703703704
+			std: 0.5190059199303033
+		Lat adapt: -0.16
+			std: 0.37416573867739417
+		Avg Recovery: 0.0
+			std: 0.0
+		Last Recovery: 0.0
+			std: 0.0
+	Algorithm: Restarts
+		QD-score: 18.012933333333333
+			std: 20.76497990963733
+		Avg Adapt: 0.2996417136136253
+			std: 1.403022880823065
+		Lat adapt: -0.28242672512795264
+			std: 0.44588057854138397
+		Avg Recovery: 0.13152437196614725
+			std: 0.7816530471296858
+		Last Recovery: 0.032492716707225346
+			std: 0.27343855481096097
+	Algorithm: Shuffling
+		QD-score: 24.84573333333333
+			std: 22.084311868525955
+		Avg Adapt: 0.2661681015191641
+			std: 1.3572604265095822
+		Lat adapt: -0.3073387783485344
+			std: 0.3734629058017399
+		Avg Recovery: 0.12382530051502431
+			std: 0.195493381642848
+		Last Recovery: 0.135021779015335
+			std: 0.22177870400787053
+	Algorithm: VCMap
+		QD-score: 21.891866666666665
+			std: 20.33699714746384
+		Avg Adapt: 0.05086320027131291
+			std: 1.0126671800165548
+		Lat adapt: -0.17735239535629632
+			std: 0.38635191288382037
+		Avg Recovery: 0.029962865584973405
+			std: 0.20042589055667426
+		Last Recovery: 0.018706527177260717
+			std: 0.2184455820216067

@@ -10,11 +10,16 @@ from GeneticAlgorithmInterface import VariableConstraintGA
 from ProblemSpaceInterface import ProblemSpace 
 
 def roulette_selection(population):
-    m = sum([c[0] for c in population])
+    small = min([c[0] for c in population]) # make all the fitnesses positive 
+    if small < 0:
+        add = -small 
+    else:
+        add = 0 
+    m = sum([c[0] + add for c in population])
     if m == 0:
         selection_probs = [1 / len(population) for c in population]
     else:
-        selection_probs = [c[0] / m for c in population]
+        selection_probs = [(c[0] + add) / m for c in population]
     return population[npr.choice(len(population), p=selection_probs)]
 
 def decide(rate):
