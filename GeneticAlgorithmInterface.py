@@ -37,8 +37,8 @@ class Measures:
         div_score = (new_div - old_div) / old_div if old_div != 0 else 0 
         qd_score = (new_qd - old_qd) / old_qd if old_qd != 0 else 0 
 
-        self.adaptability_div.append(div_score)
-        self.adaptability_qd.append(qd_score)
+        self.adaptability_div.append(float(div_score))
+        self.adaptability_qd.append(float(qd_score)) 
     
     def add_robustness(self, old_pop, new_pop):
         old_fitnesses = [element[0][0] for element in old_pop if len(element) > 0]
@@ -56,8 +56,8 @@ class Measures:
         div_score = (new_div - old_div) / old_div if old_div != 0 else 0 
         qd_score = (new_qd - old_qd) / old_qd if old_qd != 0 else 0 
 
-        self.robustness_div.append(div_score)
-        self.robustness_qd.append(qd_score)
+        self.robustness_div.append(float(div_score))
+        self.robustness_qd.append(float(qd_score))
 
     
     def add_gen(self, population, constraint_size, made_change, followed_rec):
@@ -66,11 +66,11 @@ class Measures:
 
         fitnesses = [element[0][0] for element in population if len(element) > 0]
 
-        self.qd_score.append(sum(fitnesses))
-        qd_score = sum(fitnesses)
+        self.qd_score.append(float(sum(fitnesses))) 
+        #qd_score = sum(fitnesses)
 
         if len(fitnesses) > 0:
-            self.quality.append(sum(fitnesses) / len(fitnesses))
+            self.quality.append(float(sum(fitnesses) / len(fitnesses)))
         else:
             self.quality.append(-1)
         num_bins = len([bi for bi in population if len(bi) > 0])
@@ -81,10 +81,10 @@ class Measures:
             div_score = (new_div - old_div) / new_div if new_div != 0 else 0  
             
             if followed_rec:
-                self.advisability_div.append(div_score)
+                self.advisability_div.append(float(div_score)) 
         
-        self.diversity.append(new_div)
-        self.constraint_size.append(constraint_size)
+        self.diversity.append(float(new_div))
+        self.constraint_size.append(float(constraint_size)) 
 
 
 class User:
