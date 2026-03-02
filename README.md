@@ -1,5 +1,15 @@
-# The QDA-VC Benchmark 
-This code base is for benchmarking quality diversity algorithms algorithms that adapt to changing constraint environment. It is made of problem spaces, algorithms, and procedural personas. Problem spaces define the genetic operators, fitness values, diversity functions, static constraints, and variable constraints. Algorithms take in the problem space and current constraints and return a population that satisfies all static and variable constraints , sorted into bins based on a diversity functions. Procedural personas simulate human users and add or remove variable constraints in different ways. 
+# The QDA-VC Competition
+
+
+Read the call for participants for full details on the competition. 
+
+The easiest way to create a submission is to fork this repository, and modify main.py with your code. 
+
+
+
+
+# Environment  
+The information below describes the environment generally 
 
 
 ## Problem Spaces 

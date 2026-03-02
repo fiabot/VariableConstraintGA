@@ -1,6 +1,44 @@
 
 
 from ProblemSpaceInterface import ProblemSpace
+import threading
+import sys
+import math 
+
+class MyTimeoutError(Exception):
+    # exception for our timeouts
+    pass
+def timeout_func(func, args=None, kwargs=None, timeout=30, default=None):
+    """This function will spawn a thread and run the given function
+    using the args, kwargs and return the given default value if the
+    timeout is exceeded.
+    http://stackoverflow.com/questions/492519/timeout-on-a-python-function-call
+    """
+    class InterruptableThread(threading.Thread):
+        def __init__(self):
+            threading.Thread.__init__(self)
+            self.result = default
+            self.exc_info = (None, None, None)
+        def run(self):
+            try:
+                self.result = func(*(args or ()), **(kwargs or {}))
+            except Exception as err:
+                self.exc_info = sys.exc_info()
+        def suicide(self):
+            raise MyTimeoutError(
+                "{0} timeout (taking more than {1} sec)".format(func.__name__, timeout)
+            )
+    it = InterruptableThread()
+    it.start()
+    it.join(timeout)
+    if it.exc_info[0] is not None:
+        a, b, c = it.exc_info
+        raise Exception(a, b, c)  # communicate that to caller
+    if it.isAlive():
+        it.suicide()
+        raise RuntimeError
+    else:
+        return it.result
 
 class Measures:
     """
@@ -20,6 +58,7 @@ class Measures:
         self.advisability_qd = [] 
         self.quality = [] 
         self.qd_score = [] 
+        self.gen_is_valid = [] 
     
     def add_adaptability(self, old_pop, new_pop):
         old_fitnesses = [element[0][0] for element in old_pop if len(element) > 0]
@@ -60,8 +99,9 @@ class Measures:
         self.robustness_qd.append(float(qd_score))
 
     
-    def add_gen(self, population, constraint_size, made_change):
+    def add_gen(self, population, constraint_size, made_change,valid_gen):
         self.populations.append(population)
+        self.gen_is_valid.append(valid_gen)
         
 
         fitnesses = [element[0][0] for element in population if len(element) > 0]
@@ -109,6 +149,12 @@ class VariableConstraintGA:
         self.followed_rec = False 
         self.update_interval = update_interval 
     
+    def dummy_pop(self):
+        pop = [] 
+        for i in range(self.problem_space.get_num_bins()):
+            pop.append([])
+        return pop 
+    
     def reset(self):
         """
         Reset environment for next run 
@@ -126,13 +172,13 @@ class VariableConstraintGA:
         """
         pass 
     
-    def record_gen(self, population,  new_constraints, made_change):
+    def record_gen(self, population,  new_constraints, made_change, valid_gen):
         """
         Record outcomes from a single generation 
 
         Should NOT be over-written 
         """
-        self.measure_history.add_gen(population, len(new_constraints),made_change)
+        self.measure_history.add_gen(population, len(new_constraints),made_change, valid_gen)
 
     def run_one_generation(self, cons_changed): 
         """
@@ -147,6 +193,22 @@ class VariableConstraintGA:
         NEEDS to be over-written 
         """
         return [] * self.problem_space.get_num_bins() 
+
+    def is_valid(self, ind):
+        for con in self.variable_constraints + self.problem_space.get_constant_constraints():
+            if not con.apply(ind):
+                return False 
+        return True 
+
+    def is_pop_valid(self, pop):
+        for bin in pop:
+            for fit, ind in bin:
+                if not self.is_valid(ind):
+                    return False 
+                if abs(fit - self.problem_space.fitness(ind)) > 0.000000001: 
+                    return False 
+        return True 
+                
     
     def run(self):
         """
@@ -159,8 +221,19 @@ class VariableConstraintGA:
         constraints_add_this_cycle = False 
         constraints_removed = False 
         old_pop = [[]]
+        
         for gen in range(self.number_generations):
-            population, recommendation = self.run_one_generation(self.made_change)
+            valid_gen = True 
+            population = self.run_one_generation(self.made_change)
+            try:
+                population = timeout_func(self.run_one_generation, made_change, timeout=30)
+            except MyTimeoutError as ex:
+                valid_gen = False 
+                population = self.dummy_pop()
+            
+            if not self.is_pop_valid(population):
+                valid_gen = False 
+                population = self.dummy_pop()
 
             # if interval is met, ask user to update 
             if gen % self.update_interval == 0:
@@ -178,7 +251,7 @@ class VariableConstraintGA:
                 constraints_removed = len(self.variable_constraints) > len(variable_constraints)
             else:
                 made_change = False 
-            self.record_gen(population, self.variable_constraints, self.made_change)
+            self.record_gen(population, self.variable_constraints, self.made_change, valid_gen)
             self.made_change = made_change
             self.variable_constraints = variable_constraints
         
