@@ -126,6 +126,6 @@ class RandomRestarts(VariableConstraintGA):
         
         self.infeasible_pop = new_infeasible 
 
-        return self.bins, None 
+        return self.bins
 
     

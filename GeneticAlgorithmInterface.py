@@ -60,7 +60,7 @@ class Measures:
         self.robustness_qd.append(float(qd_score))
 
     
-    def add_gen(self, population, constraint_size, made_change, followed_rec):
+    def add_gen(self, population, constraint_size, made_change):
         self.populations.append(population)
         
 
@@ -75,13 +75,6 @@ class Measures:
             self.quality.append(-1)
         num_bins = len([bi for bi in population if len(bi) > 0])
         new_div = num_bins / len(population)
-
-        if len(self.populations) > 1:
-            old_div = self.diversity[-1]
-            div_score = (new_div - old_div) / new_div if new_div != 0 else 0  
-            
-            if followed_rec:
-                self.advisability_div.append(float(div_score)) 
         
         self.diversity.append(float(new_div))
         self.constraint_size.append(float(constraint_size)) 
@@ -96,8 +89,8 @@ class User:
     def __init__(self, problem_space: ProblemSpace):
         self.problem_space = problem_space
     
-    def update_constraints(self, cur_constraints, feasible, recommendation = None):
-        return [], False, False 
+    def update_constraints(self, cur_constraints, feasible):
+        return [], False 
 
 class VariableConstraintGA:
     """
@@ -133,13 +126,13 @@ class VariableConstraintGA:
         """
         pass 
     
-    def record_gen(self, population, recommendation, new_constraints, made_change, followed_rec):
+    def record_gen(self, population,  new_constraints, made_change):
         """
         Record outcomes from a single generation 
 
         Should NOT be over-written 
         """
-        self.measure_history.add_gen(population, len(new_constraints),made_change,  followed_rec)
+        self.measure_history.add_gen(population, len(new_constraints),made_change)
 
     def run_one_generation(self, cons_changed): 
         """
@@ -153,7 +146,7 @@ class VariableConstraintGA:
         
         NEEDS to be over-written 
         """
-        return [] * self.problem_space.get_num_bins() , None 
+        return [] * self.problem_space.get_num_bins() 
     
     def run(self):
         """
@@ -177,18 +170,16 @@ class VariableConstraintGA:
                 elif constraints_removed:
                     self.measure_history.add_robustness(old_pop, population)
 
-                variable_constraints , made_change, followed_rec  = self.user.update_constraints(self.variable_constraints[:], population, recommendation)
+                variable_constraints , made_change = self.user.update_constraints(self.variable_constraints[:], population)
 
                 # beginning of new cycle 
                 old_pop = population 
                 constraints_add_this_cycle = len(self.variable_constraints) < len(variable_constraints)
                 constraints_removed = len(self.variable_constraints) > len(variable_constraints)
             else:
-                followed_rec = False 
                 made_change = False 
-            self.record_gen(population, recommendation, self.variable_constraints, self.made_change, self.followed_rec)
+            self.record_gen(population, self.variable_constraints, self.made_change)
             self.made_change = made_change
-            self.followed_rec = followed_rec 
             self.variable_constraints = variable_constraints
         
         return population

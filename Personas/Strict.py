@@ -12,7 +12,7 @@ class StrictUser(User):
     def __init__(self, problem_space: ProblemSpace):
         self.problem_space = problem_space
     
-    def update_constraints(self, cur_constraints, feasible, recommendation = None):
+    def update_constraints(self, cur_constraints, feasible):
         cur_constraints = cur_constraints[:]
 
         new_con = self.problem_space.get_rand_constraint() 
@@ -22,4 +22,6 @@ class StrictUser(User):
             i += 1 
         if not i == 1000:
             cur_constraints += [new_con]
-        return cur_constraints, True,  False 
+            return cur_constraints, True
+        else: 
+            return cur_constraints, False 

@@ -139,6 +139,6 @@ class Filtering(VariableConstraintGA):
         
         self.infeasible_pop = new_infeasible 
 
-        return self.clean_bins(), None 
+        return self.clean_bins() 
 
     

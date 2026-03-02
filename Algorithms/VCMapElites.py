@@ -300,6 +300,5 @@ class VariableConstraintMapElites(VariableConstraintGA):
         
         self.infeasible_pop = new_infeasible 
 
-        return self.bins[0], None
-
+        return self.bins[0]
     
