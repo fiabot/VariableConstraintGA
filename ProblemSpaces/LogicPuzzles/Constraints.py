@@ -2,7 +2,10 @@ import sys
 sys.path.insert(0, "../")  # add Folder_2 path to search list
 
 from ProblemSpaceInterface import ProblemSpace, Constraint
-from HintGrammar import generate_hint
+try: 
+    from HintGrammar import generate_hint
+except: 
+    from ProblemSpaces.LogicPuzzles.HintGrammar import generate_hint
 import random 
 
 

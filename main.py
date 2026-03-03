@@ -36,7 +36,7 @@ class YouAlgorithm(VariableConstraintGA):
         cons[0].apply(ind1) # returns true if constraint is satisfied 
 
 
-    def run_one_generation(self, cons_changed): 
+    def run_one_generation(self, made_change): 
         """
         Complete a single generation of the algorithm
 

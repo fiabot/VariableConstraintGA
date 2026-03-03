@@ -4,11 +4,13 @@ from ProblemSpaceInterface import ProblemSpace
 import threading
 import sys
 import math 
+import json
+import pickle 
 
 class MyTimeoutError(Exception):
     # exception for our timeouts
     pass
-def timeout_func(func, args=None, kwargs=None, timeout=30, default=None):
+def timeout_func(func, args=(), kwargs={}, timeout=30, default=None):
     """This function will spawn a thread and run the given function
     using the args, kwargs and return the given default value if the
     timeout is exceeded.
@@ -21,7 +23,7 @@ def timeout_func(func, args=None, kwargs=None, timeout=30, default=None):
             self.exc_info = (None, None, None)
         def run(self):
             try:
-                self.result = func(*(args or ()), **(kwargs or {}))
+                self.result = func(*args, **kwargs)
             except Exception as err:
                 self.exc_info = sys.exc_info()
         def suicide(self):
@@ -34,7 +36,7 @@ def timeout_func(func, args=None, kwargs=None, timeout=30, default=None):
     if it.exc_info[0] is not None:
         a, b, c = it.exc_info
         raise Exception(a, b, c)  # communicate that to caller
-    if it.isAlive():
+    if it.is_alive():
         it.suicide()
         raise RuntimeError
     else:
@@ -99,7 +101,7 @@ class Measures:
         self.robustness_qd.append(float(qd_score))
 
     
-    def add_gen(self, population, constraint_size, made_change,valid_gen):
+    def add_gen(self, population, constraint_size, made_change, valid_gen):
         self.populations.append(population)
         self.gen_is_valid.append(valid_gen)
         
@@ -180,7 +182,7 @@ class VariableConstraintGA:
         """
         self.measure_history.add_gen(population, len(new_constraints),made_change, valid_gen)
 
-    def run_one_generation(self, cons_changed): 
+    def run_one_generation(self, made_change): 
         """
         Complete a single generation of the algorithm
 
@@ -208,7 +210,24 @@ class VariableConstraintGA:
                 if abs(fit - self.problem_space.fitness(ind)) > 0.000000001: 
                     return False 
         return True 
-                
+
+    def get_avg_qd_score(self):
+        qd_scores = self.measure_history.qd_score 
+
+        return sum(qd_scores) / len(qd_scores)
+
+    def save_measure_history(self, filename, folder = ""):
+        json_dict = {"qd-scores": self.measure_history.qd_score, "valid_gens": self.measure_history.gen_is_valid, "delta_add_qd": self.measure_history.adaptability_qd, "delta_remove_qd": self.measure_history.robustness_qd}
+
+        json_str = json.dumps(json_dict)
+        json_file = open(folder +  filename + ".json", "w")
+        json_file.write(json_str)
+        json_file.close()
+
+        pickle_file = open(folder +  filename + ".pickle", "wb")
+        pickle.dump(self.measure_history, pickle_file)
+        pickle_file.close()
+
     
     def run(self):
         """
@@ -224,9 +243,9 @@ class VariableConstraintGA:
         
         for gen in range(self.number_generations):
             valid_gen = True 
-            population = self.run_one_generation(self.made_change)
+            #population = self.run_one_generation(self.made_change)
             try:
-                population = timeout_func(self.run_one_generation, made_change, timeout=30)
+                population = timeout_func(self.run_one_generation, kwargs={"made_change":self.made_change}, timeout=30)
             except MyTimeoutError as ex:
                 valid_gen = False 
                 population = self.dummy_pop()

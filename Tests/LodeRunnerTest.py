@@ -3,14 +3,14 @@ import os
 from pathlib import Path
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir)) 
-sys.path.append(str(Path.cwd().parent) + "/ProblemSpaces/pcg_benchmark_variable_containt") 
+sys.path.append(str(Path.cwd().parent) + "/ProblemSpaces/LodeRunner") 
 from GeneticAlgorithmInterface import VariableConstraintGA
 from Algorithms.Shuffling import Shuffling 
 from Personas.Exploratory import ExploratoryUser
 from Personas.DoNothing import DoNothing 
 from Personas.Strict import StrictUser 
 from Personas.Adaptive import AdaptiveUser
-from ProblemSpaces.pcg_benchmark_variable_containt.LodeRunnerProblemSpace import LodRunnerProblemSpace
+from ProblemSpaces.LodeRunner.LodeRunnerProblemSpace import LodRunnerProblemSpace
 
 
 problem_space = LodRunnerProblemSpace()

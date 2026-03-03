@@ -3,8 +3,10 @@ from itertools import combinations
 import random
 from copy import deepcopy
 from enum import Enum
-from Insights import Insight 
-
+try:
+    from Insights import Insight 
+except: 
+    from ProblemSpaces.LogicPuzzles.Insights import Insight 
 ###### HELPER FUNCTIONS ####### 
 def cross_out(puzzle, cat1, cat2, ent1, ent2):
     """

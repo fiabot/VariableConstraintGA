@@ -5,6 +5,8 @@ Read the call for participants for full details on the competition.
 
 The easiest way to create a submission is to fork this repository, and modify main.py with your code. 
 
+The test.py file in the main folder shows you how to run experiments in this environment. 
+
 
 
 

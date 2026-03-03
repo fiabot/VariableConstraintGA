@@ -8,9 +8,14 @@ sys.path.append(str(Path.cwd().parent.parent))
 sys.path.append(str(Path.cwd().parent)) 
 sys.path.append(str(Path.cwd())) 
 from ProblemSpaceInterface import ProblemSpace, Constraint
-from LogicPuzzle import Puzzle, Category
-from HintGrammar import HintSet, generate_hint
-from Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory
+try: 
+    from LogicPuzzle import Puzzle, Category
+    from HintGrammar import HintSet, generate_hint
+    from Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory
+except: 
+    from ProblemSpaces.LogicPuzzles.LogicPuzzle import Puzzle, Category
+    from ProblemSpaces.LogicPuzzles.HintGrammar import HintSet, generate_hint
+    from ProblemSpaces.LogicPuzzles.Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory 
 import random 
 
 order = Category("order", ["1st", "2nd", "3rd", "4th"], True)
