@@ -144,9 +144,12 @@ The current benchmark has 4 personas.
 
 * Exploratory Persona: this persona randomly adds or removes a constraint at each generation every cycle. This is
 meant to simulate users or situations with no clear pattern.
+
 • Strict Persona: this persona randomly adds a non-contradictory constraint at each cycle. If a non-contradictory constraint
 cannot be found it does nothing. This is meant to test algorithms in the most difficult situations.
+
 • Adaptable Persona: this persona adds a random constraint that is already satisfied in this current population. This is meant to simulate users who look for patterns or valuable individuals in the existing population, along with testing for how well the algorithms can exploit existing solutions.
+
 • Cycle Persona: this algorithm adds a random constraint for the first two cycles, and then removes the first constraint added. It then switches between adding a new constraint and removing the oldest constraint (such that there are between 1 and 2 constraints). This provides a constantly changing environment, while still giving the algorithm 2-3 cycles to learn a constraint.
 
 ## Existing Data 
