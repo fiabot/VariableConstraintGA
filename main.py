@@ -1,53 +1,181 @@
-from GeneticAlgorithmInterface import VariableConstraintGA 
+from flask import Flask, render_template, request, url_for, jsonify
+from flask_cors import CORS, cross_origin 
+app = Flask(__name__)
+import database 
 
-class YouAlgorithm(VariableConstraintGA):
-    def set_up(self): 
-        """
-        Insert all your set up code here 
+@app.route("/add_user", methods=["POST"])
+@cross_origin()
+def add_account():
 
-        You can generation an initial population 
-        of individuals. However you may only 
-        generate self.population_size in this method, and 
-        can only store up to self.max_memory individuals  
-        in total   
-        
-        We provide the useful functions 
-        and values available for you to use here 
-        """
+    request_data = request.get_json() 
 
-        self.population_size # the max number of individuals you can generate per generation 
-        self.max_memory # the max number of individuals you can store at any time (always > then pop size)
-        self.mutation_rate # the rate of mutation to give mutation function 
-        self.cross_over_rate # the ratio of time you should preform the cross over function 
-        self.variable_constraints # the current list of variable constraints 
+    key = request_data["user"]
+    time = request_data["time"]
 
-        ind1 = self.problem_space.generate_random_individual() # randomly generate a new individual 
-        ind2 = self.problem_space.generate_random_individual() 
+    result = database.create_user(key, time)
 
-        fit = self.problem_space.fitness(ind1) # quality value of individual 
-        ind3 = self.problem_space.mutate(ind1, self.mutation_rate) # preform mutation 
-        child1, child2 = self.problem_space.cross_over(ind1, ind2) # preform cross over 
+    if not result is None and result != -1:
+        response = jsonify("success")
+        return response
+    elif result is None:
+        response = jsonify("existing user")
+        return response
+    else:
+        response = jsonify("something else went wrong")
+        return response, 401
 
-        cons = self.problem_space.get_constant_constraints() # list of static constraints 
-        self.problem_space.get_num_bins() # number of diversity bins in problem space 
-        self.problem_space.place_in_bin(ind1) # get the index of bin ind should be placed in 
-        
-        # you can check if individuals satisfy a constant through the apply function 
-        cons[0].apply(ind1) # returns true if constraint is satisfied 
+@app.route("/new_session", methods=["POST"])
+@cross_origin()
+def new_session():
+
+    request_data = request.get_json()
+
+    privateKey = request_data["user"]
+
+    result = database.new_session(privateKey, request_data["startTime"])
+
+    if not result is None and result != -1:
+        return result
+    elif result is None:
+        response = jsonify("user does not exist")
+        return response, 401
+
+@app.route("/add_click", methods=["POST"])
+@cross_origin()
+def add_click():
+
+    request_data = request.get_json()
 
 
-    def run_one_generation(self, made_change): 
-        """
-        Complete a single generation of the algorithm
+    database.add_click(request_data["user"], request_data["sessionId"], request_data)
 
-        Returns the population of valid (by both constant and variable constraints)
-        individuals that are shorted in bins. Each individual should be stored as a tuple
-        with the first value being the fitness and the second being the object 
+    return "success"
 
-        EX: [[(fit1, obj1)], [], [(fit2, obj2), (fit3, obj3)], .... ] 
-        
-        """
-        pop = [] 
-        for i in range(self.problem_space.get_num_bins()):
-            pop.append([])
-        return pop 
+
+
+@app.route("/like_puzzle", methods=["POST"])
+@cross_origin()
+def like_puzzle():
+
+    request_data = request.get_json()
+
+    username = request_data["user"]
+
+    result = database.like_ind(username, request_data["evolveId"], request_data["ind"])
+
+    if not result is None:
+        return {"idx": result}
+
+    else:
+        response = jsonify("user not found")
+        return response, 406
+
+@app.route("/remove_puzzle", methods=["POST"])
+@cross_origin()
+def remove_puzzle():
+
+    request_data = request.get_json()
+
+    username = request_data["user"]
+
+    result = database.remove_ind(username,request_data["evolveId"], request_data["idx"])
+
+    if not result is None:
+        return "success"
+
+    else:
+        response = jsonify("user not found")
+        return response, 406
+
+@app.route("/update_puzzle", methods=["POST"])
+@cross_origin()
+def update_puzzle():
+
+    request_data = request.get_json()
+
+    username = request_data["user"]
+
+    result = database.update_ind(username,request_data["evolveId"], request_data["idx"], request_data["ind"])
+
+    if not result is None:
+        return "success"
+
+    else:
+        response = jsonify("user not found")
+        return response, 406
+     
+@app.route("/get_liked_puzzles", methods=["GET"])
+@cross_origin()
+def get_liked_puzzles():
+    username = request.args.get("user")
+    session = request.args.get("evolveId")
+
+    result = database.get_liked(username, session)
+
+    if not result is None:
+        return jsonify(result)
+
+    else:
+        response = jsonify("user not found")
+        return response, 406
+
+
+@app.route("/createScenario", methods=["POST"])
+@cross_origin()
+def createScenario():
+    request_data = request.get_json() 
+
+    results = database.create_scenario(request_data["user"], request_data["time"], request_data["data"])
+
+    return jsonify(results)
+
+@app.route("/updateScenario", methods=["POST"])
+@cross_origin()
+def updateScenario():
+    request_data = request.get_json() 
+
+    results = database.update_scenario_data(request_data["user"], request_data["scenario"], request_data["time"], request_data["data"])
+
+    return jsonify(results)
+
+@app.route("/getScenarios", methods=["GET"])
+@cross_origin()
+def get_scenarios():
+    username = request.args.get("user")
+    
+    return jsonify(database.get_scenarios(username))
+
+@app.route("/getEvolveSession", methods=["GET"])
+@cross_origin()
+def get_evolve_session():
+    username = request.args.get("user")
+    evolve =request.args.get("evolveId")
+    
+    return jsonify(database.get_evolve_session(username, evolve))
+
+
+@app.route("/startEvolution", methods=["POST"])
+@cross_origin()
+def start_evolution():
+    request_data = request.get_json()
+
+    result = database.create_evolve_start(request_data["user"], request_data["time"], request_data["cons"], request_data["scenario"]) 
+
+    return jsonify(result)
+
+@app.route("/continueEvolution", methods=["POST"])
+@cross_origin()
+def continue_evolution():
+    request_data = request.get_json()
+
+    result = database.continue_evolution(request_data["user"], request_data["time"], request_data["cons"], request_data["id"])
+
+    if result is None:
+        response = jsonify("user not found")
+        return response, 406
+    else:
+        return jsonify(result)
+
+
+if __name__ == "__main__":
+    app.run(port=3000)

@@ -60,7 +60,7 @@ def get_duplicates(hint):
         except:
             print(hint)
             raise Exception("Getting rule failed")
-        
+        print(rule)
         terms = hint[rule]
        
         if rule == "is":
@@ -89,6 +89,8 @@ def get_duplicates(hint):
                     all_combos.append({"compound_or": [pos1] + [pos2]})
                     all_combos.append({"compound_or": [pos2] + [pos1]})
             return all_combos
+        else: 
+            return []
 
 
 ## Variable constraints 

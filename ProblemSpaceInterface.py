@@ -112,5 +112,21 @@ class ProblemSpace:
         """
         return Constraint()
     
+    def to_json(self, ind):
+        """
+        Return a dictionary 
+        that represents an individual 
+        that can be passed through https 
+        """
+
+        return {} 
+    
+    def json_to_constraint(self, json):
+        """
+        Takes a json representing a constraint 
+        and return a constraint object 
+        """
+        return Constraint()
+    
 
     

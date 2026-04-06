@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 import math 
 
-
 sys.path.append(str(Path.cwd().parent.parent)) 
 sys.path.append(str(Path.cwd().parent)) 
 sys.path.append(str(Path.cwd())) 
@@ -11,11 +10,13 @@ from ProblemSpaceInterface import ProblemSpace, Constraint
 try: 
     from LogicPuzzle import Puzzle, Category
     from HintGrammar import HintSet, generate_hint
-    from Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory
+    from Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory, HasHint
+    from HintToEnglish import hint_to_english, serialized_hint_grammar, deserialized_hint_grammar
 except: 
     from ProblemSpaces.LogicPuzzles.LogicPuzzle import Puzzle, Category
     from ProblemSpaces.LogicPuzzles.HintGrammar import HintSet, generate_hint
-    from ProblemSpaces.LogicPuzzles.Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory 
+    from ProblemSpaces.LogicPuzzles.Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory, HasHint
+    from ProblemSpaces.LogicPuzzles.HintToEnglish import hint_to_english, serialized_hint_grammar, deserialized_hint_grammar
 import random 
 
 order = Category("order", ["1st", "2nd", "3rd", "4th"], True)
@@ -26,6 +27,27 @@ ingredient = Category(
 
 SOUP_PUZZLE = Puzzle([order, method, ingredient])
 
+def make_puzzle(data):
+ 
+    categories = []
+    if "categories" in data:
+        for element in data["categories"]:
+            name = element["name"]
+            entities = element["entities"]
+            is_numeric = element["is_numeric"]
+            category = Category(name, entities, is_numeric)
+            categories.append(category)
+        puzzle = Puzzle(categories)
+        return puzzle
+    else:
+        return SOUP_PUZZLE
+
+def category_to_json(cat):
+    di = {}
+    di["name"] = cat.title 
+    di["entities"] = cat.entities 
+    di["is_numeric"] = cat.is_numeric
+    return di 
 
 class LogicPuzzleSpace (ProblemSpace):
     def __init__(self, basePuzzle = None): 
@@ -102,3 +124,36 @@ class LogicPuzzleSpace (ProblemSpace):
     
     def get_ind_constraint(self, ind):
         return constraint_in_ind(ind)
+    
+    def to_json(self, ind, data = {},database={}):
+        """
+        Return a dictionary 
+        that represents an individual 
+        that can be passed through https 
+        """
+
+        di = {}
+        di["solution"] = ind.completed_puzzle.print_grid_small()
+        di["categories"] = [
+            category_to_json(cat) for cat in ind.completed_puzzle.categories
+        ]
+        di["hints"] = [
+            hint_to_english(hint, grammar_dict=database) for hint in ind.hints
+        ]
+        di["hint_grammar"] = [serialized_hint_grammar(hint) for hint in ind.hints]
+    
+        if "name" in data:
+            di["name"] = data["name"]
+        if "scenario" in data:
+            di["scenario"] = data["scenario"]
+        return di
+    
+    def json_to_constraint(self, json):
+        """
+        Takes a json representing a constraint 
+        and return a constraint object 
+        """
+        grammar = deserialized_hint_grammar(json, self.basePuzzle.categories)
+        print(hint_to_english(grammar))
+        return HasHint(grammar)
+    

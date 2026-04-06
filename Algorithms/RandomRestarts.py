@@ -101,7 +101,6 @@ class RandomRestarts(VariableConstraintGA):
         
 
     def run_one_generation(self, made_change): 
-
         # if the constraints have been change, reset population 
         if made_change:
             self.set_up()

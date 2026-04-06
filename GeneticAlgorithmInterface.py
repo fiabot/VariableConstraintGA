@@ -194,8 +194,7 @@ class VariableConstraintGA:
         
         NEEDS to be over-written 
         """
-        return [] * self.problem_space.get_num_bins() 
-
+        return  self.dummy_pop()
     def is_valid(self, ind):
         for con in self.variable_constraints + self.problem_space.get_constant_constraints():
             if not con.apply(ind):
@@ -227,7 +226,49 @@ class VariableConstraintGA:
         pickle_file = open(folder +  filename + ".pickle", "wb")
         pickle.dump(self.measure_history, pickle_file)
         pickle_file.close()
+    
+    def set_up_run(self):
+        self.reset()
+        self.set_up()
+        self.old_pop = [[]]
+    def run_interval(self, cons):
+        """
+        just runes one interval without 
+        prompting a user 
+        """ 
+        constraints_add_this_cycle = len(cons) > len(self.variable_constraints) 
+        constraints_removed = len(cons) < len(self.variable_constraints)
+        made_change = constraints_removed or constraints_add_this_cycle 
+        self.variable_constraints = cons 
+        old_pop = [[]]
+        for gen in range(self.number_generations):
+            valid_gen = True 
+    
+            try:
+                population = timeout_func(self.run_one_generation, kwargs={"made_change":self.made_change}, timeout=30)
+            except MyTimeoutError as ex:
+                valid_gen = False 
+                population = self.dummy_pop()
+            
+            if not self.is_pop_valid(population):
+                valid_gen = False 
+                population = self.dummy_pop()
 
+          
+            if constraints_add_this_cycle:
+                self.measure_history.add_adaptability(old_pop, population)
+                constraints_add_this_cycle = False 
+            elif constraints_removed:
+                self.measure_history.add_robustness(old_pop, population)
+                constraints_removed = False   
+            else:
+                made_change = False 
+
+            self.record_gen(population, self.variable_constraints, self.made_change, valid_gen)
+            self.made_change = made_change
+        self.old_pop = population
+        
+        return population
     
     def run(self):
         """
@@ -270,6 +311,7 @@ class VariableConstraintGA:
                 constraints_removed = len(self.variable_constraints) > len(variable_constraints)
             else:
                 made_change = False 
+                
             self.record_gen(population, self.variable_constraints, self.made_change, valid_gen)
             self.made_change = made_change
             self.variable_constraints = variable_constraints
