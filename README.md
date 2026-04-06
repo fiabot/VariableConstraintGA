@@ -1,7 +1,7 @@
 # The QDA-VC Competition
 
 
-Read the call for participants for full details on the competition. 
+Please first read through CompetitionDetails.pdf, which expains what is required for submission along information about the existing codebase. 
 
 The easiest way to create a submission is to fork this repository, and modify main.py with your code. 
 
