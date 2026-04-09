@@ -176,6 +176,11 @@ def continue_evolution():
     else:
         return jsonify(result)
 
+@app.route("/getExamples", methods=["GET"])
+@cross_origin()
+def getExamples():
+    return  jsonify(database.get_examples("logic_puzzles")) 
+
 
 if __name__ == "__main__":
     app.run(port=3000)

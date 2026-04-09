@@ -299,6 +299,7 @@ class VariableConstraintMapElites(VariableConstraintGA):
             self.place_in_bin(child2, new_infeasible)
         
         self.infeasible_pop = new_infeasible 
+        
 
         return self.bins[0]
     

@@ -35,6 +35,10 @@ class GridIsComplete(Constraint):
     def __str__(self):
         return "grid: {} is complete".format(self.grid_key)
 
+class IsValid(Constraint):
+    def apply(self, indv):
+        return indv.valid 
+
 class NoViolations(Constraint):
 
     def apply(self, indv):
@@ -50,8 +54,9 @@ def get_constant_constraints(puzz):
     valid_constraints = [GridIsValid(key) for key in grid_keys]
     complete_constraints = [GridIsComplete(key) for key in grid_keys]
     violations = NoViolations()
+    valid = IsValid()
 
-    return valid_constraints + complete_constraints + [violations]
+    return valid_constraints + complete_constraints + [violations] + [valid]
 
 
 def get_duplicates(hint):

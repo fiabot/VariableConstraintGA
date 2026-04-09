@@ -215,8 +215,7 @@ def compound_or_to_english(attributes, grammar_dict={}):
 
     text1 = hint_to_english(hint1, grammar_dict=grammar_dict)
     text2 = hint_to_english(hint2, grammar_dict=grammar_dict)
-    text1 = text1[0].lower() + text1[1:]
-    text2 = text2[0].lower() + text2[1:]
+
 
     s = "Either {} or {}".format(text1, text2)
     return s

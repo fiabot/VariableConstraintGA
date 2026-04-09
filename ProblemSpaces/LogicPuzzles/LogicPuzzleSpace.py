@@ -2,6 +2,7 @@ import sys
 import os 
 from pathlib import Path
 import math 
+import json 
 
 sys.path.append(str(Path.cwd().parent.parent)) 
 sys.path.append(str(Path.cwd().parent)) 
@@ -12,11 +13,13 @@ try:
     from HintGrammar import HintSet, generate_hint
     from Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory, HasHint
     from HintToEnglish import hint_to_english, serialized_hint_grammar, deserialized_hint_grammar
+    from examples import examples 
 except: 
     from ProblemSpaces.LogicPuzzles.LogicPuzzle import Puzzle, Category
     from ProblemSpaces.LogicPuzzles.HintGrammar import HintSet, generate_hint
     from ProblemSpaces.LogicPuzzles.Constraints import get_constant_constraints, random_constraint, constraint_in_ind, is_contradictory, HasHint
     from ProblemSpaces.LogicPuzzles.HintToEnglish import hint_to_english, serialized_hint_grammar, deserialized_hint_grammar
+    from ProblemSpaces.LogicPuzzles.examples import examples 
 import random 
 
 order = Category("order", ["1st", "2nd", "3rd", "4th"], True)
@@ -156,4 +159,11 @@ class LogicPuzzleSpace (ProblemSpace):
         grammar = deserialized_hint_grammar(json, self.basePuzzle.categories)
         print(hint_to_english(grammar))
         return HasHint(grammar)
+    
+    def get_examples(self):
+        """
+        Provide examples of scenarios for this enviroment 
+        """
+        return examples["examples"] 
+
     

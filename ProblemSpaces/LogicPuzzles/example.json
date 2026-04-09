@@ -1,0 +1,31 @@
+{
+    "examples": [
+        {
+            "title": "Murder Mystery", 
+            "Description": "Use the clues to find out who killed Mr. Boddy!", 
+            "categories":[{"name": "Suspects", "entities": ["Col. Mustard", "Prof. Plum", "Ms. Scarlet", "Mrs. White", "Mr. Green"], "is_numeric": false, "inc":0}, 
+            {"name": "Weapons", "entities": ["Rope", "Knife", "Candlestick", "Wrench", "Revolver", "Wrench"], "is_numeric": false, "inc":0}, 
+            {"name": "Locations", "entities": ["Library", "Kitchen", "Great Room", "Ballroom", "Study", "Dinning Room"], "is_numeric": false, "inc":0}, 
+            {"name": "Time", "entities": ["5pm", "6pm", "7pm", "8pm", "9pm", "10pm"], "is_numeric": true, "inc":1}
+        ]
+        }, {
+            "title": "Magic Potion", 
+            "Description": "Use the clues to determine how to cook up this magical potion", 
+            "categories":[
+                {"name":"Ingredients", "entities": ["Eye of Newt", "Cobwebs", "Feathers", "Petals", "Dragon Scales"], "is_numeric":false, "inc":0}, 
+                {"name":"Preparation", "entities": ["Boiled", "Crushed", "Charred", "Chopped", "Whole"], "is_numeric":false, "inc":0}, 
+                {"name":"Order", "entities": ["1st", "2nd", "3rd", "4th", "5th"], "is_numeric":true, "inc":1}, 
+                {"name":"Amount", "entities": ["1 spoonful", "2 spoonfuls", "3 spoonfuls", "4 spoonfuls", "5 spoonfuls"], "is_numeric":true, "inc":1}
+            ]
+        },{
+            "title": "School Schedule", 
+            "Description": "Help Timmy remember his school schedule", 
+            "categories":[
+                {"name":"Subject", "entities": ["English", "Math", "Science", "History", "Art"], "is_numeric":false, "inc":0}, 
+                {"name":"Teacher", "entities": ["Ms. Smith", "Mr. Williams", "Ms. Johnson", "Mr. Brown", "Ms. Martin"], "is_numeric":false, "inc":0}, 
+                {"name":"Period", "entities": ["1st", "2nd", "3rd", "4th", "5th"], "is_numeric":true, "inc":1}, 
+                {"name":"Folder Color", "entities": ["Yellow", "Red", "Blue", "Purple", "Orange"], "is_numeric":true, "inc":1}
+            ]
+        }
+    ]
+}

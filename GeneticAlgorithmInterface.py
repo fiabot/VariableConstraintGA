@@ -241,7 +241,7 @@ class VariableConstraintGA:
         made_change = constraints_removed or constraints_add_this_cycle 
         self.variable_constraints = cons 
         old_pop = [[]]
-        for gen in range(self.number_generations):
+        for gen in range(self.update_interval):
             valid_gen = True 
     
             try:

@@ -36,7 +36,7 @@ evolveInstances = db["evolveInst"]
 evolveBuckets = gridfs.GridFSBucket(db, "evolveAlgorithms")
 
 DEFAULT_SETTINGS = {"logicPuzzles":{
-    "interval": 50, 
+    "interval": 25, 
     "x-over": 0.7, 
     "mutation": 0.5, 
     "pop_size": 200, 
@@ -131,15 +131,15 @@ def create_evolve_start(key, time, cons, scenarioInstance):
             puzzle = make_puzzle(scen["data"])
             problemSpace = LogicPuzzleSpace(basePuzzle=puzzle)
         
-        algo = Shuffling
-        """if mode == "filtering":
+        print(mode)
+        if mode == "filtering":
             algo = Filtering
         elif mode == "shuffling": 
             algo = Shuffling 
         elif mode == "restarts":
             algo = RandomRestarts 
         else: 
-            algo = VariableConstraintGA """ 
+            algo = VariableConstraintMapElites
         
         
         # create and run algorithm 
@@ -148,9 +148,13 @@ def create_evolve_start(key, time, cons, scenarioInstance):
                          update_interval=settings["interval"])
 
         
-        new_cons = [problemSpace.json_to_constraint(con) for con in cons]
+        new_cons = [problemSpace.json_to_constraint(con["con"]) for con in cons]
+        print("constraints")
+        print(cons)
         algorithm.set_up_run() 
         outcome = algorithm.run_interval(new_cons)
+        print("outcome")
+        print(outcome)
 
 
        # Dump pickle file into bucket  
@@ -210,7 +214,7 @@ def continue_evolution(key, time, cons, file_id):
 
     #run algorithm 
     problemSpace = algo.problem_space 
-    new_cons = [problemSpace.json_to_constraint(con) for con in cons]
+    new_cons = [problemSpace.json_to_constraint(con["con"]) for con in cons]
     outcome = algo.run_interval(new_cons)
 
     # Dump algorithm 
@@ -301,7 +305,7 @@ def new_session(key, start_time):
         return None
 
 def add_click(key, id, data):
-    click_data = {"name": data["name"], "rel_time": data["rel_time"], "abs_time": data["abs_time"], "type": data["type"]}
+    click_data = {"name": data["name"], "rel_time": data["rel_time"], "abs_time": data["abs_time"]}
     if "data" in data:
         click_data["data"] = data["data"]
 
@@ -313,3 +317,7 @@ def add_click(key, id, data):
             "$set": {"totalTime": data["rel_time"], "endTime": data["abs_time"]},
         },
     )
+
+def get_examples(space):
+    if space == "logic_puzzles":
+        return LogicPuzzleSpace().get_examples()
