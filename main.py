@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 import database 
 
-@app.route("/add_user", methods=["POST"])
+@app.route("/api/add_user", methods=["POST"])
 @cross_origin()
 def add_account():
 
@@ -24,7 +24,7 @@ def add_account():
         response = jsonify("something else went wrong")
         return response, 401
 
-@app.route("/new_session", methods=["POST"])
+@app.route("/api/new_session", methods=["POST"])
 @cross_origin()
 def new_session():
 
@@ -40,7 +40,7 @@ def new_session():
         response = jsonify("user does not exist")
         return response, 401
 
-@app.route("/add_click", methods=["POST"])
+@app.route("/api/add_click", methods=["POST"])
 @cross_origin()
 def add_click():
 
@@ -53,7 +53,7 @@ def add_click():
 
 
 
-@app.route("/like_puzzle", methods=["POST"])
+@app.route("/api/like_puzzle", methods=["POST"])
 @cross_origin()
 def like_puzzle():
 
@@ -70,7 +70,7 @@ def like_puzzle():
         response = jsonify("user not found")
         return response, 406
 
-@app.route("/remove_puzzle", methods=["POST"])
+@app.route("/api/remove_puzzle", methods=["POST"])
 @cross_origin()
 def remove_puzzle():
 
@@ -87,7 +87,7 @@ def remove_puzzle():
         response = jsonify("user not found")
         return response, 406
 
-@app.route("/update_puzzle", methods=["POST"])
+@app.route("/api/update_puzzle", methods=["POST"])
 @cross_origin()
 def update_puzzle():
 
@@ -104,7 +104,7 @@ def update_puzzle():
         response = jsonify("user not found")
         return response, 406
      
-@app.route("/get_liked_puzzles", methods=["GET"])
+@app.route("/api/get_liked_puzzles", methods=["GET"])
 @cross_origin()
 def get_liked_puzzles():
     username = request.args.get("user")
@@ -120,7 +120,7 @@ def get_liked_puzzles():
         return response, 406
 
 
-@app.route("/createScenario", methods=["POST"])
+@app.route("/api/createScenario", methods=["POST"])
 @cross_origin()
 def createScenario():
     request_data = request.get_json() 
@@ -129,7 +129,7 @@ def createScenario():
 
     return jsonify(results)
 
-@app.route("/updateScenario", methods=["POST"])
+@app.route("/api/updateScenario", methods=["POST"])
 @cross_origin()
 def updateScenario():
     request_data = request.get_json() 
@@ -138,14 +138,14 @@ def updateScenario():
 
     return jsonify(results)
 
-@app.route("/getScenarios", methods=["GET"])
+@app.route("/api/getScenarios", methods=["GET"])
 @cross_origin()
 def get_scenarios():
     username = request.args.get("user")
     
     return jsonify(database.get_scenarios(username))
 
-@app.route("/getEvolveSession", methods=["GET"])
+@app.route("/api/getEvolveSession", methods=["GET"])
 @cross_origin()
 def get_evolve_session():
     username = request.args.get("user")
@@ -154,7 +154,7 @@ def get_evolve_session():
     return jsonify(database.get_evolve_session(username, evolve))
 
 
-@app.route("/startEvolution", methods=["POST"])
+@app.route("/api/startEvolution", methods=["POST"])
 @cross_origin()
 def start_evolution():
     request_data = request.get_json()
@@ -163,7 +163,7 @@ def start_evolution():
 
     return jsonify(result)
 
-@app.route("/continueEvolution", methods=["POST"])
+@app.route("/api/continueEvolution", methods=["POST"])
 @cross_origin()
 def continue_evolution():
     request_data = request.get_json()
@@ -176,7 +176,7 @@ def continue_evolution():
     else:
         return jsonify(result)
 
-@app.route("/getExamples", methods=["GET"])
+@app.route("/api/getExamples", methods=["GET"])
 @cross_origin()
 def getExamples():
     return  jsonify(database.get_examples("logic_puzzles")) 
