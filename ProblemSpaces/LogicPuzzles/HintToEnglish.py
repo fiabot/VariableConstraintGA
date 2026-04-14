@@ -160,7 +160,7 @@ def before_to_english(attributes, grammar_dict={}):
             template = template_info["untimed"]
         else:
 
-            template = "{ent1} has less{num_cat} than {ent2}"
+            template = "{ent1} has less {num_cat} than {ent2}"
         template = toTemplate(template) 
         return template.safe_substitute(cat1= cat1, cat2=cat2, num_cat=num_cat, step=step, ent1=ent1, ent2=ent2 )
     else:
