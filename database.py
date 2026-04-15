@@ -101,6 +101,19 @@ def get_scenarios(key):
         s["_id"] = str(s["_id"])
     
     return scens 
+
+def get_num_puzzles(outcome):
+    num = 0 
+    for row in outcome:
+        num += len(row)
+    return num 
+
+def qd_score(outcome):
+    qd = 0 
+    for row in outcome:
+        if (len(row) > 0):
+            qd += row[0][0]
+
     
 def outcome_to_json(outcome, problem_space):
     new_out = [] 
@@ -187,6 +200,8 @@ def create_evolve_start(key, time, cons, scenarioInstance):
             "fileId": file_id, 
             "cons": cons ,
             "sessionId": sessionId, 
+            "numberPuzzles": get_num_puzzles(outcome), 
+            "qd-score": qd_score(outcome), 
             "children": [] 
         }
 
@@ -232,6 +247,8 @@ def continue_evolution(key, time, cons, file_id):
             "fileId": new_file_id, 
             "cons": cons , 
             "sessionId": sessionId, 
+            "numberPuzzles": get_num_puzzles(outcome), 
+            "qd-score": qd_score(outcome), 
             "children": [] 
         }
     evolveInstances.insert_one(data) 
