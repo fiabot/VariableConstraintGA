@@ -161,7 +161,7 @@ def create_evolve_start(key, time, cons, scenarioInstance):
                          update_interval=settings["interval"])
 
         
-        new_cons = [problemSpace.json_to_constraint(con["con"]) for con in cons]
+        new_cons = [problemSpace.json_to_constraint(con["con"]) for con in cons if not con is None]
         print("constraints")
         print(cons)
         algorithm.set_up_run() 
@@ -229,7 +229,7 @@ def continue_evolution(key, time, cons, file_id):
 
     #run algorithm 
     problemSpace = algo.problem_space 
-    new_cons = [problemSpace.json_to_constraint(con["con"]) for con in cons]
+    new_cons = [problemSpace.json_to_constraint(con["con"]) for con in cons if not con is None]
     outcome = algo.run_interval(new_cons)
 
     # Dump algorithm 

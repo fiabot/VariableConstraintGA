@@ -157,7 +157,8 @@ class LogicPuzzleSpace (ProblemSpace):
         and return a constraint object 
         """
         grammar = deserialized_hint_grammar(json, self.basePuzzle.categories)
-        print(hint_to_english(grammar))
+        if grammar is None:
+            return None 
         return HasHint(grammar)
     
     def get_examples(self):

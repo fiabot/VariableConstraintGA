@@ -298,7 +298,10 @@ def get_category_with_title(categories, title):
 def deserialized_hint_grammar(hint, categories):
     print(hint)
     hint = deepcopy(hint)
-    kind = next(iter(hint))
+    kind = next(iter(hint), None)
+
+    if kind is None: 
+        return None 
 
     attributes = hint[kind]
 
