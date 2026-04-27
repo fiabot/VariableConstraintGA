@@ -243,17 +243,7 @@ class VariableConstraintGA:
         old_pop = [[]]
         for gen in range(self.update_interval):
             valid_gen = True 
-    
-            try:
-                population = timeout_func(self.run_one_generation, kwargs={"made_change":self.made_change}, timeout=30)
-            except MyTimeoutError as ex:
-                valid_gen = False 
-                population = self.dummy_pop()
-            
-            if not self.is_pop_valid(population):
-                valid_gen = False 
-                population = self.dummy_pop()
-
+            population = self.run_one_generation(made_change=self.made_change)
           
             if constraints_add_this_cycle:
                 self.measure_history.add_adaptability(old_pop, population)

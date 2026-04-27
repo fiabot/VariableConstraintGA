@@ -106,7 +106,7 @@ def get_num_puzzles(outcome):
     num = 0 
     for row in outcome:
         num += len(row)
-    return num 
+    return num  
 
 def qd_score(outcome):
     qd = 0 
