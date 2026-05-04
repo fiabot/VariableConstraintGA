@@ -113,6 +113,7 @@ def qd_score(outcome):
     for row in outcome:
         if (len(row) > 0):
             qd += row[0][0]
+    return qd 
 
     
 def outcome_to_json(outcome, problem_space):
