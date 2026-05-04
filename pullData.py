@@ -53,7 +53,8 @@ def get_user_json(id):
     clicks = []
     total_time = 0
     for s in sess: 
-        total_time += s["totalTime"]
+        if not s["totalTime"] is None: 
+            total_time += s["totalTime"]
         clicks.append(s["clicks"])
     
     j["total_time"] = total_time 
