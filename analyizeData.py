@@ -21,6 +21,7 @@ def print_times(data):
     print(minutes)
 
     print("\nAvg:{}".format(statistics.mean(minutes)))
+    print("\nMed:{}".format(statistics.median(minutes)))
     print("STD:{}".format(statistics.stdev(minutes)))
 
 
