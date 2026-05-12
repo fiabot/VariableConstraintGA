@@ -92,7 +92,7 @@ def save_all_with_scen(keys, folder="userData"):
     for key in keys:
         j = get_user_json(key)
         if (key == 'R_3DIGpKwtFeW5KpD'):
-            print(j)
+            print(j["scenarios"])
         if (not j is None and len(j["scenarios"]) > 0):
             j = json.dumps(j)
             file = open("{}/user_{}.json".format(folder, index), "w")
