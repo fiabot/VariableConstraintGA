@@ -94,8 +94,7 @@ def save_all_with_scen(keys, folder="userData"):
         if (key == 'R_3DIGpKwtFeW5KpD'):
             print(j["scenarios"])
         if (not j is None and len(j["scenarios"]) > 0):
-            if (key == 'R_3DIGpKwtFeW5KpD'):
-                print("Saving User!") 
+            print(key)
             j = json.dumps(j)
             file = open("{}/user_{}.json".format(folder, index), "w")
             file.write(j)
