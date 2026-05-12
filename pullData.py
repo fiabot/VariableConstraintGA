@@ -91,8 +91,6 @@ def save_all_with_scen(keys, folder="userData"):
     index =0 
     for key in keys:
         j = get_user_json(key)
-        if (key == 'R_3DIGpKwtFeW5KpD'):
-            print(j["scenarios"])
         if (not j is None and len(j["scenarios"]) > 0):
             print(key)
             j = json.dumps(j)
@@ -100,6 +98,10 @@ def save_all_with_scen(keys, folder="userData"):
             file.write(j)
             file.close()
             index += 1 
+        else:
+            print(key)
+            print(j)
+            print("\n\n")
 
 if __name__ == "__main__":
     print(get_all_keys())
