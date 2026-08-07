@@ -67,7 +67,7 @@ class VariableConstraintMapElites(VariableConstraintGA):
         # select from feasible 
         grid_size = self.num_in_grid()
 
-        if decide(grid_size *2 / (grid_size+ len(self.infeasible_pop))):
+        if grid_size > 0 and decide(grid_size *2 / (grid_size+ len(self.infeasible_pop))):
 
             # First select the row (based on ranking)
             row = self.select_row()
@@ -85,7 +85,7 @@ class VariableConstraintMapElites(VariableConstraintGA):
 
     def make_room(self):
         '''
-        remove the worst indivual if the 
+        remove the worst individual if the 
         feasible or infeasible population exceeds max capacity 
         '''
 

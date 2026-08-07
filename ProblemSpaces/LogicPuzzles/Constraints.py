@@ -65,7 +65,6 @@ def get_duplicates(hint):
         except:
             print(hint)
             raise Exception("Getting rule failed")
-        print(rule)
         terms = hint[rule]
        
         if rule == "is":
